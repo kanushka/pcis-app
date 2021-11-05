@@ -15,6 +15,14 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_item_id');
+            $table->foreignId('supplier_id');
+            $table->foreignId('account_id');
+            $table->enum('currency', ['LKR', 'USD'])->default('LKR');
+            $table->float('amount', 11, 2);
+            $table->enum('type', ['credit', 'debit'])->default('credit');
+            $table->string('note')->nullable();
+            $table->foreignId('paid_by');
             $table->timestamps();
         });
     }

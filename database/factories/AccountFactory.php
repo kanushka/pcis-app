@@ -13,8 +13,11 @@ class AccountFactory extends Factory
      */
     public function definition()
     {
+        $company = $this->faker->company();
         return [
-            //
+            'name' => $company . " Acc",
+            'bank' => $company,
+            'number' => $this->faker->numerify('####-####-####'),
         ];
     }
 }

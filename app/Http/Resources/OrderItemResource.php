@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Resources\DeliveryResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\SupplierResource;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderItemResource extends JsonResource
@@ -22,6 +23,8 @@ class OrderItemResource extends JsonResource
             'supplier' => new SupplierResource($this->whenLoaded('supplier')),
             'material' => new MaterialResource($this->whenLoaded('material')),
             'quantity' => $this->quantity,
+            'paid' => $this->paid,
+            'transactions' => TransactionResource::collection($this->whenLoaded('transactions')),
             'delivered' => $this->delivered,
             'deliveries' => DeliveryResource::collection($this->whenLoaded('deliveries')),
             'note' => $this->note,

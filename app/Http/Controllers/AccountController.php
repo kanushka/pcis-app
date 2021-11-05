@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Http\Resources\AccountResource;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -14,7 +15,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        //
+        return AccountResource::collection(Account::paginate());
     }
 
     /**
@@ -25,7 +26,19 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'bank' => 'required|string|max:255',
+            'number' => 'required|string|max:255',
+        ]);
+
+        $account = new Account;
+        $account->name = $request->name;
+        $account->bank = $request->bank;
+        $account->number = $request->number;
+        $account->save();
+
+        return new AccountResource($account);
     }
 
     /**
@@ -36,7 +49,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        //
+        return new MaterialResource($account);
     }
 
     /**
@@ -48,7 +61,18 @@ class AccountController extends Controller
      */
     public function update(Request $request, Account $account)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'bank' => 'required|string|max:255',
+            'number' => 'required|string|max:255',
+        ]);
+
+        $account->name = $request->name;
+        $account->bank = $request->bank;
+        $account->number = $request->number;
+        $account->save();
+
+        return new AccountResource($account);
     }
 
     /**
@@ -59,6 +83,6 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
-        //
+        $account->delete();
     }
 }

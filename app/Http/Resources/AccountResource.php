@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\SupplierResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MaterialResource extends JsonResource
+class AccountResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +17,8 @@ class MaterialResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'unit' => $this->unit,
-            'unit_price' => $this->unit_price,
-            'suppliers' => SupplierResource::collection($this->whenLoaded('suppliers')),
+            'bank' => $this->bank,
+            'number' => $this->number,
         ];
     }
 }

@@ -16,6 +16,11 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

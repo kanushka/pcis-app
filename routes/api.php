@@ -36,10 +36,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('deliveries', DeliveryController::class);
     Route::apiResource('materials', MaterialController::class);
     Route::apiResource('orders', OrderController::class);
-    Route::put('/approve', [UserController::class, 'approve']);
+    Route::put('/orders/{order}/approve', [OrderController::class, 'approve']);
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('transactions', TransactionController::class);
     Route::apiResource('permissions', PermissionController::class);
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('users', UserController::class);
 });
+
+
+// sail artisan make:resource AccountResource
+// sail artisan make:resource AccountCollection
+// sail artisan make:resource TransactionResource
+// sail artisan make:resource TransactionCollection

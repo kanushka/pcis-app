@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\OrderItemResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -22,6 +23,7 @@ class OrderResource extends JsonResource
             'orderItems' => OrderItemResource::collection($this->whenLoaded('orderItems')),
             'approvedAt' => $this->approved_at,
             'approvedBy' => new UserResource($this->whenLoaded('approvedBy')),
+            'transactions' => TransactionResource::collection($this->whenLoaded('transactions')),
             'orderedBy' => new UserResource($this->whenLoaded('orderedBy')),
             'createdAt' => $this->created_at,
         ];

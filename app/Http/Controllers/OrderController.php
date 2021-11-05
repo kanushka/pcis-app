@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderResource;
+use App\Models\Transaction;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -62,7 +63,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return new OrderResource(Order::with(['orderItems', 'approvedBy', 'orderedBy'])->where('id', $order->id)->firstOrFail());
+        return new OrderResource(Order::with([
+            'orderItems.supplier', 
+            'orderItems.material', 
+            'orderItems.transactions', 
+            'orderItems.deliveries', 
+            'approvedBy', 
+            'orderedBy'
+            ])->where('id', $order->id)->firstOrFail());
     }
 
     /**
@@ -113,12 +121,28 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'note' => 'nullable|string|max:255',
+            'accountId' => 'required|exists:accounts,id',
         ]);
 
         $order->note = $request->note;
         $order->approved_at = now();
         $order->approved_by = $request->user()->id;
         $order->save();
+
+        foreach ($order->orderItems as $key => $orderItem) {            
+            $transaction = new Transaction;
+            $transaction->order_item_id = $orderItem->id;
+            $transaction->supplier_id = $orderItem->supplier->id;
+            $transaction->account_id = $request->accountId;
+            $transaction->amount = $orderItem->material->unit_price * $orderItem->quantity;
+            $transaction->type = 'debit';
+            $transaction->note = $request->note;
+            $transaction->paid_by = $request->user()->id;
+            $transaction->save();
+
+            $orderItem->paid = true;
+            $orderItem->save();
+        }
 
         return new OrderResource($order);
     }

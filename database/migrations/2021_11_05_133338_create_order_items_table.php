@@ -19,6 +19,7 @@ class CreateOrderItemsTable extends Migration
             $table->foreignId('supplier_id');
             $table->foreignId('material_id');
             $table->unsignedInteger('quantity');
+            $table->boolean('paid')->default(false);                
             $table->boolean('delivered')->default(false);                
             $table->string('note')->nullable();
             $table->timestamps();
