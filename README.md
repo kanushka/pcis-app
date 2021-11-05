@@ -6,6 +6,9 @@ In basic terms Procurement is the process used to obtain construction projects. 
 
 Linked Frontend Repo https://github.com/KasunWijeratne/group10-pms-esad
 
+### API Schema
+https://documenter.getpostman.com/view/2618215/UVC2HV6r
+
 ## Contributing
 
 - Kanushka - ms21911262@my.sliit.lk

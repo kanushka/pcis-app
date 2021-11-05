@@ -36,7 +36,23 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' =>  'nullable|email',
+            'phone' =>  'nullable|string|max:255',
+            'address' =>  'nullable|string|max:255',
+        ]);
+
+        $supplier = new Supplier;
+
+        $supplier->name = $request->name;
+        $supplier->email = $request->email;
+        $supplier->phone = $request->phone;
+        $supplier->address = $request->address;
+
+        $supplier->save();
+
+        return new SupplierResource($supplier);
     }
 
     /**
@@ -70,7 +86,21 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' =>  'nullable|email',
+            'phone' =>  'nullable|string|max:255',
+            'address' =>  'nullable|string|max:255',
+        ]);
+
+        $supplier->name = $request->name;
+        $supplier->email = $request->email;
+        $supplier->phone = $request->phone;
+        $supplier->address = $request->address;
+
+        $supplier->save();
+
+        return new SupplierResource($supplier);
     }
 
     /**
@@ -81,6 +111,6 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        //
+        $supplier->forceDelete();
     }
 }
