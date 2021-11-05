@@ -26,7 +26,18 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'permissions' => 'required|array',
+        ]);
+
+        $role = new Role;
+        $role->name = $request->name;
+        $role->save();
+        
+        $role->permissions()->attach($request->permissions);
+
+        return new RoleResource($role);
     }
 
     /**
@@ -49,7 +60,17 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'permissions' => 'required|array',
+        ]);
+
+        $role->name = $request->name;
+        $role->save();
+        
+        $role->permissions()->sync($request->permissions);
+
+        return new RoleResource($role);
     }
 
     /**
@@ -60,6 +81,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->forceDelete();
     }
 }

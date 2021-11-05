@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MaterialResource;
 use App\Models\Material;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class MaterialController extends Controller
@@ -36,7 +37,18 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'suppliers' => 'required|array',
+        ]);
+
+        $material = new Material;
+        $material->name = $request->name;
+        $material->save();
+        
+        $material->suppliers()->attach($request->suppliers);
+
+        return new MaterialResource($material);
     }
 
     /**
@@ -70,7 +82,16 @@ class MaterialController extends Controller
      */
     public function update(Request $request, Material $material)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'suppliers' => 'required|array',
+        ]);
+
+        $material->name = $request->name;
+        $material->suppliers()->sync($request->suppliers);
+        $material->save();
+
+        return new MaterialResource($material);
     }
 
     /**
@@ -81,6 +102,6 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        //
+        $material->forceDelete();
     }
 }
