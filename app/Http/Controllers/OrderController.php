@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -14,17 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return OrderResource::collection(Order::with('orderedBy')->paginate());
     }
 
     /**
@@ -35,7 +27,31 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'note' => 'nullable|string|max:255',
+            'orderItems' => 'required|array',
+            'orderItems.*.supplierId' => 'required|exists:suppliers,id',
+            'orderItems.*.materialId' => 'required|exists:materials,id',
+            'orderItems.*.quantity' => 'required|integer',
+            'orderItems.*.note' => 'nullable|string|max:255',
+        ]);
+
+        $order = new Order;
+        $order->note = $request->note;
+        $order->ordered_by = $request->user()->id;
+        $order->save();
+
+        foreach ($request->orderItems as $key => $orderItem) {
+            $orderItem = new OrderItem([
+                'supplier_id' => $orderItem["supplierId"],
+                'material_id' => $orderItem["materialId"],
+                'quantity' => $orderItem["quantity"],
+                'note' => $orderItem["note"],
+            ]);
+            $order->orderItems()->save($orderItem);
+        }
+
+        return new OrderResource($order);
     }
 
     /**
@@ -46,18 +62,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
+        return new OrderResource(Order::with(['orderItems', 'approvedBy', 'orderedBy'])->where('id', $order->id)->firstOrFail());
     }
 
     /**
@@ -69,7 +74,53 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $validated = $request->validate([
+            'note' => 'nullable|string|max:255',
+            'orderItems' => 'required|array',
+            'orderItems.*.supplierId' => 'required|exists:suppliers,id',
+            'orderItems.*.materialId' => 'required|exists:materials,id',
+            'orderItems.*.quantity' => 'required|integer',
+            'orderItems.*.note' => 'nullable|string|max:255',
+        ]);
+
+        $order->note = $request->note;
+        $order->ordered_by = $request->user()->id;
+        $order->save();
+
+        $order->orderItems()->delete();
+
+        foreach ($request->orderItems as $key => $orderItem) {
+            $orderItem = new OrderItem([
+                'supplier_id' => $orderItem["supplierId"],
+                'material_id' => $orderItem["materialId"],
+                'quantity' => $orderItem["quantity"],
+                'note' => array_key_exists("note", $orderItem) ? $orderItem["note"] : "",
+            ]);
+            $order->orderItems()->save($orderItem);
+        }
+
+        return new OrderResource($order);
+    }
+
+    /**
+     * Approve the order
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+    public function approve(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $order->note = $request->note;
+        $order->approved_at = now();
+        $order->approved_by = $request->user()->id;
+        $order->save();
+
+        return new OrderResource($order);
     }
 
     /**
@@ -80,6 +131,6 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
     }
 }

@@ -111,6 +111,6 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        $supplier->forceDelete();
+        $supplier->delete();
     }
 }

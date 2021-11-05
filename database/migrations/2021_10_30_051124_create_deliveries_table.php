@@ -15,6 +15,11 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id');
+            $table->foreignId('order_item_id');
+            $table->foreignId('signed_by')->references('id')->on('users');
+            $table->boolean('returned')->default(false);
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

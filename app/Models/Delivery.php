@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Delivery extends Model
 {
     use HasFactory;
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function signedBy()
+    {
+        return $this->belongsTo(User::class, 'signed_by');
+    }
 }

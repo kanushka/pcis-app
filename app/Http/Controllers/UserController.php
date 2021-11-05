@@ -48,6 +48,18 @@ class UserController extends Controller
     }
 
     /**
+     * Logout user
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return ["message" => "User logout successfully"];
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -147,6 +159,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->forceDelete();
+        $user->delete();
     }
 }

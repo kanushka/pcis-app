@@ -40,6 +40,7 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'suppliers' => 'required|array',
+            'suppliers.*' => 'required|exists:suppliers,id',
         ]);
 
         $material = new Material;
@@ -85,6 +86,7 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'suppliers' => 'required|array',
+            'suppliers.*' => 'required|exists:suppliers,id',
         ]);
 
         $material->name = $request->name;
@@ -102,6 +104,6 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        $material->forceDelete();
+        $material->delete();
     }
 }

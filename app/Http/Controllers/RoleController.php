@@ -29,6 +29,7 @@ class RoleController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'permissions' => 'required|array',
+            'permissions.*' => 'required|exists:permissions,id',
         ]);
 
         $role = new Role;
@@ -63,6 +64,7 @@ class RoleController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'permissions' => 'required|array',
+            'permissions.*' => 'required|exists:permissions,id',
         ]);
 
         $role->name = $request->name;
@@ -81,6 +83,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $role->forceDelete();
+        $role->delete();
     }
 }

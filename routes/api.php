@@ -31,10 +31,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
     Route::apiResource('accounts', AccountController::class);
     Route::apiResource('deliveries', DeliveryController::class);
     Route::apiResource('materials', MaterialController::class);
     Route::apiResource('orders', OrderController::class);
+    Route::put('/approve', [UserController::class, 'approve']);
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('transactions', TransactionController::class);
     Route::apiResource('permissions', PermissionController::class);
