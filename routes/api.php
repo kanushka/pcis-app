@@ -28,12 +28,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::apiResource('accounts', AccountController::class);
 Route::apiResource('deliveries', DeliveryController::class);
 Route::apiResource('materials', MaterialController::class);
 Route::apiResource('orders', OrderController::class);
-Route::apiResource('permissions', PermissionController::class);
 Route::apiResource('suppliers', SupplierController::class);
 Route::apiResource('transactions', TransactionController::class);
+Route::apiResource('permissions', PermissionController::class);
+Route::apiResource('roles', RoleController::class);
 Route::apiResource('users', UserController::class);
+
+
+// sail artisan make:resource UserResource
+// sail artisan make:resource UserCollection

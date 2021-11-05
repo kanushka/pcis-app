@@ -15,11 +15,17 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'role_id' => $this->faker->numberBetween(11, 14),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'birthday' => $this->faker->date('Y-m-d'),
+            'phone' => $this->faker->phoneNumber(),
+            'address' => $this->faker->address(),
+            'company' => $this->faker->company(),
+            'profile_image' => $this->faker->image(null, 640, 480),
         ];
     }
 

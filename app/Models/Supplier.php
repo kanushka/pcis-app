@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Supplier extends Model
 {
     use HasFactory;
+
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class);
+    }
 }
